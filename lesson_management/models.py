@@ -3,6 +3,7 @@ from django.db import models
 # Create your models here.
 from django.utils.text import slugify
 from module_management.models import Module
+from accounts.models import User
 
 
 class Lesson(models.Model):
@@ -22,6 +23,8 @@ class Lesson(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     
     updated_at = models.DateTimeField(auto_now=True)
+
+    created_by = models.ForeignKey(User,on_delete=models.CASCADE)
 
     resource_link = models.CharField(max_length=200,null=True)
 
@@ -45,7 +48,7 @@ class Lesson(models.Model):
 
             self.slug = slugify(self.title)
 
-        return super().save()
+        super().save(*args,**kwargs)
     
     def __str__(self):
             
@@ -54,5 +57,5 @@ class Lesson(models.Model):
     class Meta:
 
         ordering = ["order"]
-        
+
         unique_together = ["module", "order"]
